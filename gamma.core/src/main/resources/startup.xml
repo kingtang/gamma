@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Startup>
+	<ContextParam>
+		<name>springConfigLocations</name>
+		<value>classpath*:/META-INF/spring/*-importer.xml,classpath*:/META-INF/spring/gamma*.xml</value>
+	</ContextParam>
+</Startup>
