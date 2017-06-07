@@ -1,5 +1,6 @@
 package com.king.caesar.gamma.registry.zookeeper;
 
+import java.io.Closeable;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ import com.king.caesar.gamma.registry.zookeeper.listener.ServiceListener;
 import com.king.caesar.gamma.rpc.api.service.Service;
 
 /**
- * 服务注册中心
+ * 服务注册中心基于zookeeper实现
  * 
  * @author: Caesar
  * @date: 2017年5月24日 下午9:57:35
@@ -43,6 +44,8 @@ public class ZookeeperRegistry extends AbstractEventService implements Registry
     private volatile boolean inited = false;
     
     private CuratorFramework zkClient;
+    
+    private List<Closeable> closeableComps = new ArrayList<Closeable>();
     
     // 连接zookeeper
     public synchronized void connect(String connectString)
@@ -83,6 +86,11 @@ public class ZookeeperRegistry extends AbstractEventService implements Registry
         log.info("ZookeeperClient connect with  {}  successfully.", connectString);
     }
     
+    /**
+     * 状态变更通知，由于上层已经是curator的线程了，这里就不用单独的线程去通知了。
+     * 
+     * @param statusType
+     */
     public void stateChanged(Event.StatusType statusType)
     {
         for (ConnectionStatusListener connectionStatusListener : statusListeners)
@@ -111,6 +119,7 @@ public class ZookeeperRegistry extends AbstractEventService implements Registry
         
         // 创建缓存
         PathChildrenCache pathCache = new PathChildrenCache(zkClient, path, true);
+        closeableComps.add(pathCache);
         PathChildrenCacheListener pathCacheListener = new PathChildrenCacheListener()
         {
             
@@ -153,7 +162,7 @@ public class ZookeeperRegistry extends AbstractEventService implements Registry
         }
     }
     
-    private boolean checkExists(String path)
+    public boolean checkExists(String path)
     {
         try
         {
@@ -217,19 +226,27 @@ public class ZookeeperRegistry extends AbstractEventService implements Registry
         }
         
     }
-
+    
+    /*
+     * 订阅服务并设置监听
+     * 
+     * @see
+     * com.king.caesar.gamma.registry.Registry#subscribeService(java.
+     * lang.String, com.king.caesar.gamma.registry.zookeeper.listener.
+     * ServiceListener)
+     */
     @Override
     public List<Service> subscribeService(String path, ServiceListener listener)
     {
         List<String> services = subscribe(path, listener);
-        if(null == services)
+        if (null == services)
         {
             return null;
         }
         List<Service> providers = new ArrayList<Service>();
-        for(String service : services)
+        for (String service : services)
         {
-            String servicePath = path+"/"+service;
+            String servicePath = path + "/" + service;
             String data = getData(servicePath);
             Service provider = JSON.parseObject(data, Service.class);
             providers.add(provider);
@@ -237,18 +254,36 @@ public class ZookeeperRegistry extends AbstractEventService implements Registry
         }
         return providers;
     }
-
+    
     @Override
     public String getData(String path)
     {
         try
         {
             byte[] data = zkClient.getData().forPath(path);
-            return new String(data,Charset.forName("UTF-8"));
+            return new String(data, Charset.forName("UTF-8"));
         }
         catch (Exception e)
         {
             throw new IllegalStateException(e.getMessage(), e);
         }
+    }
+    
+    @Override
+    public void close()
+    {
+        for (Closeable closeable : closeableComps)
+        {
+            try
+            {
+                closeable.close();
+            }
+            catch (Exception e)
+            {
+                log.error("Close resource failed.", e);
+            }
+        }
+        // 关闭zk
+        zkClient.close();
     }
 }
