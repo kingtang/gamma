@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gamma="http://gamma.caesar.com/schema/gamma"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://gamma.caesar.com/schema/gamma
+        http://gamma.caesar.com/schema/gamma/gamma.xsd">
+	<bean id="remoteServiceInvoker"
+		class="com.king.caesar.gamma.handler.GammaServiceInvokerHandler" init-method="init"/>
+	<bean id="localServiceInvoker" class="com.king.caesar.gamma.handler.LocalServiceInvokeHandler" />
+	<gamma:handler name="remoteService" ref="remoteServiceInvoker"
+		isHead="true" />
+	<!--before代表前一个结点的名字 -->
+	<gamma:handler name="localService" ref="localServiceInvoker"
+		before="remoteService" />
+	<bean id="zookeeper"
+		class="com.king.caesar.gamma.registry.zookeeper.ZookeeperRegistry" />
+	<bean id="failfast" class="com.king.caesar.gamma.ha.FailFastStrategy" />
+	<bean id="roundrobin" class="com.king.caesar.gamma.balance.RoundRobinBalancer" />
+</beans>
