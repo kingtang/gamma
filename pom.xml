@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.king.caesar</groupId>
+	<artifactId>gamma</artifactId>
+	<version>1.0.0</version>
+	<packaging>pom</packaging>
+
+	<name>gamma</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<gamma.version>1.0.0</gamma.version>
+	</properties>
+
+	<modules>
+		<module>gamma.core</module>
+		<module>gamma.registry</module>
+		<module>gamma.remoting</module>
+		<module>gamma.connector</module>
+		<module>gamma.engine</module>
+		<module>gamma.monitor</module>
+		<module>gamma.spring</module>
+		<module>gamma.dependency</module>
+		<module>gamma.rpc</module>
+		<module>gamma.spring.api</module>
+		<module>gamma.rpc.api</module>
+		<module>gamma.remoting.api</module>
+		<module>gamma.test</module>
+		<module>gamma.demo</module>
+	</modules>
+
+	<dependencies>
+	</dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.king.caesar</groupId>
+				<artifactId>gamma.dependency</artifactId>
+				<version>${gamma.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.1</version>
+				<configuration>
+					<attach>true</attach>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>compile</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
