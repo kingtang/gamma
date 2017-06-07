@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:gamma="http://gamma.caesar.com/schema/gamma"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://gamma.caesar.com/schema/gamma
+        http://gamma.caesar.com/schema/gamma/gamma.xsd">
+
+	<bean id="student" class="org.springframework.domain.Student">
+		<property name="id">
+			<value>90</value>
+		</property>
+	</bean>
+
+	<gamma:exporter id="first_service">
+		<gamma:methodRefine>
+			<gamma:method name=""/>
+		</gamma:methodRefine>
+		<gamma:methodFilter type="include">
+			<gamma:method name=""/>
+		</gamma:methodFilter>
+	</gamma:exporter>
+	
+</beans>

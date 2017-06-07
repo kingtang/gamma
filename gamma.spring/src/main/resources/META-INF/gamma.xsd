@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns="http://gamma.caesar.com/schema/gamma"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:tool="http://www.springframework.org/schema/tool"
+	targetNamespace="http://gamma.caesar.com/schema/gamma">
+
+	<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+	<xsd:import namespace="http://www.springframework.org/schema/tool" />
+	<xsd:import namespace="http://www.springframework.org/schema/beans" />
+
+	<xsd:element name="method">
+		<xsd:complexType>
+			<xsd:attribute name="name" type="xsd:string" use="required">
+				<xsd:annotation>
+					<xsd:documentation><![CDATA[ 方法名。 ]]></xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="argumentTypes" type="xsd:string"
+				use="optional">
+				<xsd:annotation>
+					<xsd:documentation><![CDATA[ 参数类型（逗号分隔）, 无参数用void. 如果方法无重载，则可不写。 ]]></xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="timeout" type="xsd:string" use="optional">
+				<xsd:annotation>
+					<xsd:documentation><![CDATA[ 方法级的超时时间,优先级高于接口级别【客户端属性】。 ]]></xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="threadPool" type="xsd:string" use="optional">
+				<xsd:annotation>
+					<xsd:documentation><![CDATA[ 指定执行的线程池，用于故障隔离【服务端属性】。 ]]></xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="exporter" type="exportConfig"></xsd:element>
+
+	<xsd:complexType name="exportConfig">
+		<xsd:choice maxOccurs="unbounded" minOccurs="0">
+			<xsd:element ref="methodRefine" />
+			<xsd:element ref="methodFilter" />
+		</xsd:choice>
+		<xsd:attribute name="ref" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation><![CDATA[
+				所发布服务的实现类引用，配置为实现类的bean ID。
+			]]></xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="interface" type="xsd:token">
+			<xsd:annotation>
+				<xsd:documentation><![CDATA[
+				所发布服务的接口名。
+			]]></xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="protocol" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation><![CDATA[
+				所发布服务的协议类型，默认为gamma协议。
+			]]></xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="name" type="xsd:ID" use="required">
+			<xsd:annotation>
+				<xsd:documentation><![CDATA[
+				所发布服务的服务名，全局唯一，客户端调用服务时指定该名称。
+			]]></xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="group" type="xsd:string"></xsd:attribute>
+		<xsd:attribute name="version" type="xsd:string"></xsd:attribute>
+		<xsd:attribute name="tpsThreshold" type="xsd:int">
+			<xsd:annotation>
+				<xsd:documentation><![CDATA[
+				tps限流，每秒钟内达到该值后其余的消息拒绝。
+			]]></xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:anyAttribute processContents="lax" />
+	</xsd:complexType>
+
+	<xsd:element name="methodRefine">
+		<xsd:annotation>
+			<xsd:documentation><![CDATA[
+				用于方法级的精细化配置。
+			]]></xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:choice maxOccurs="unbounded" minOccurs="1">
+				<xsd:element ref="method"></xsd:element>
+			</xsd:choice>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="methodFilter">
+		<xsd:annotation>
+			<xsd:documentation><![CDATA[
+				用于过滤方法是否发布，include类型表示指定的方法要发布成服务，相反exclude类型
+				表示除指定方法外的其他方法要发布成服务。
+			]]></xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:choice maxOccurs="unbounded" minOccurs="1">
+				<xsd:element ref="method"></xsd:element>
+			</xsd:choice>
+			<xsd:attribute name="type" type="filterType" use="required" />
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:simpleType name="filterType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="include"></xsd:enumeration>
+			<xsd:enumeration value="exclude"></xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+
+	<xsd:complexType name="importConfig">
+		<xsd:choice maxOccurs="unbounded" minOccurs="0">
+			<xsd:element ref="methodRefine" />
+			<xsd:element ref="methodFilter" />
+		</xsd:choice>
+		<xsd:attribute name="name" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation><![CDATA[
+				importer bean name。
+			]]></xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="interface" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation><![CDATA[
+				导入服务的接口类型。
+			]]></xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="directUrl" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation><![CDATA[
+				直连时配置服务端的地址。
+			]]></xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="failPolicy" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation><![CDATA[
+				失败策略，比如failfast,failover等等。
+			]]></xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="router" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation><![CDATA[
+				指定路由策略比如随机、轮询、权重等等。
+			]]></xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="timeout" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation><![CDATA[
+				服务超时时间，单位ms。
+			]]></xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="group" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation><![CDATA[
+				服务分组。
+			]]></xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="version" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation><![CDATA[
+				服务版本，用于服务多版本。
+			]]></xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="protocol" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation><![CDATA[
+				导入服务的协议类型。
+			]]></xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="remoteServiceId" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation><![CDATA[
+				导入服务引用的远程服务ID。
+			]]></xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+
+	<xsd:element name="importer" type="importConfig">
+	</xsd:element>
+
+	<xsd:complexType name="registryConfig">
+		<xsd:attribute name="name" type="xsd:string"></xsd:attribute>
+		<xsd:attribute name="type" type="xsd:string"></xsd:attribute>
+		<xsd:attribute name="address" type="xsd:string"></xsd:attribute>
+		<xsd:attribute name="username" type="xsd:string"></xsd:attribute>
+		<xsd:attribute name="password" type="xsd:string"></xsd:attribute>
+		<xsd:attribute name="sessiontTimeout" type="xsd:string"></xsd:attribute>
+		<xsd:attribute name="reconnectInterval" type="xsd:string"></xsd:attribute>
+	</xsd:complexType>
+
+	<xsd:element name="register" type="registryConfig"></xsd:element>
+
+	<xsd:element name="handler" type="handlerConfig">
+	</xsd:element>
+
+	<xsd:complexType name="handlerConfig">
+		<xsd:attribute name="name" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation><![CDATA[ handler名字 。 ]]></xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="ref" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation><![CDATA[
+				Handler Bean。
+			]]></xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="before" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation><![CDATA[ 在某个handler之前插入则填写此handler的名称。 ]]></xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="after" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation><![CDATA[ 在某个handler之后插入则填写此handler的名称。 ]]></xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="isHead" type="boolType" use="optional">
+			<xsd:annotation>
+				<xsd:documentation><![CDATA[ 指定该handler是否头结点。 ]]></xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="isTail" type="boolType" use="optional">
+			<xsd:annotation>
+				<xsd:documentation><![CDATA[ 指定该handler是否尾结点。 ]]></xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+
+	<xsd:simpleType name="boolType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="true"></xsd:enumeration>
+			<xsd:enumeration value="false"></xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+</xsd:schema>
