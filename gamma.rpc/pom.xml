@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.king.caesar</groupId>
+		<artifactId>gamma</artifactId>
+		<version>1.0.0</version>
+	</parent>
+	<artifactId>gamma.rpc</artifactId>
+	<name>gamma.rpc</name>
+	<url>http://maven.apache.org</url>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.king.caesar</groupId>
+			<artifactId>gamma.spring.api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.king.caesar</groupId>
+			<artifactId>gamma.core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.king.caesar</groupId>
+			<artifactId>gamma.rpc.api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.king.caesar</groupId>
+			<artifactId>gamma.remoting.api</artifactId>
+		</dependency>
+		<!-- <dependency>
+			<groupId>com.king.caesar</groupId>
+			<artifactId>gamma.engine</artifactId>
+		</dependency> -->
+		<dependency>
+			<groupId>com.king.caesar</groupId>
+			<artifactId>gamma.registry</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-all</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.protostuff</groupId>
+			<artifactId>protostuff-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.protostuff</groupId>
+			<artifactId>protostuff-runtime</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.ow2.asm</groupId>
+			<artifactId>asm</artifactId>
+			<version>4.0</version>
+		</dependency>
+	</dependencies>
+</project>

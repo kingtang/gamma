@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gamma="http://gamma.caesar.com/schema/gamma"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://gamma.caesar.com/schema/gamma
+        http://gamma.caesar.com/schema/gamma/gamma.xsd">
+
+	<bean id="protostuff"
+		class="com.king.caesar.gamma.rpc.codec.serializer.ProtostuffSerializer" />
+	<bean id="serializer_factory" class="com.king.caesar.gamma.rpc.util.SerializerFactory"
+		init-method="init" />
+</beans>
