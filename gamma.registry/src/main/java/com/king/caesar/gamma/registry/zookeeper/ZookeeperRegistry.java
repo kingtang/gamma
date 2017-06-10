@@ -26,6 +26,7 @@ import com.king.caesar.gamma.core.util.ConfigName;
 import com.king.caesar.gamma.registry.Registry;
 import com.king.caesar.gamma.registry.zookeeper.event.AbstractEventService;
 import com.king.caesar.gamma.registry.zookeeper.event.Event;
+import com.king.caesar.gamma.registry.zookeeper.event.Event.StatusType;
 import com.king.caesar.gamma.registry.zookeeper.listener.AbstractConnectionStatusListener;
 import com.king.caesar.gamma.registry.zookeeper.listener.ConnectionStatusListener;
 import com.king.caesar.gamma.registry.zookeeper.listener.ServiceListener;
@@ -60,6 +61,8 @@ public class ZookeeperRegistry extends AbstractEventService implements Registry
             .sessionTimeoutMs(ConfigName.REGISTRY_SESSION_TIMEOUT)
             .retryPolicy(new RetryNTimes(Integer.MAX_VALUE, 3000))
             .build();
+        // 注册服务恢复监听
+        this.addStatusListener(new RecoverService());
         // 注册状态监听器
         zkClient.getConnectionStateListenable().addListener(new ConnectionStateListener()
         {
@@ -134,11 +137,12 @@ public class ZookeeperRegistry extends AbstractEventService implements Registry
                 switch (type)
                 {
                     case CHILD_ADDED:
-                        System.out.println("child added");
+                        log.info("child[{}] added", path);
                         listener.serviceAdded(obj, path);
                         break;
                     case CHILD_REMOVED:
-                        System.out.println("child removed");
+                        log.info("child[{}] deleted", path);
+                        listener.serviceDeleted(obj, path);
                         break;
                     case CHILD_UPDATED:
                         System.out.println("child update");
@@ -187,6 +191,10 @@ public class ZookeeperRegistry extends AbstractEventService implements Registry
     
     class RecoverService extends AbstractConnectionStatusListener
     {
+        public RecoverService()
+        {
+            this.registerEvent(StatusType.RECONNECTED);
+        }
         
         @Override
         protected void doStatusChanged()
@@ -196,6 +204,9 @@ public class ZookeeperRegistry extends AbstractEventService implements Registry
         
     }
     
+    /**
+     * 用于zk断链后的服务恢复
+     */
     public void recovery()
     {
         

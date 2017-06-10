@@ -69,14 +69,7 @@ public class ServiceCenter implements ServiceListener
     public synchronized void serviceAdded(Service addedService, String servicePath)
     {
         String[] paths = servicePath.split(RegistryUtil.PATH_SEPARATOR);
-        String serviceTriple = paths[SERVICETRIPLE_IDX];
-        
-        log.info("There is a new provider service online and the service name is {}.", serviceTriple);
-        
-        String provider = paths[PROVIDER_IDX];
-        String[] serviceArray = serviceTriple.split(Service.SERVICE_SEPERATOR);
-        ServiceTriple<String, String, String> serviceKey = new ServiceTriple<String, String, String>(
-            serviceArray[GROUP_IDX], serviceArray[SERVICE_IDX], serviceArray[VERSION_IDX]);
+        ServiceTriple<String, String, String> serviceKey = createServiceTriple(paths);
         
         List<ProviderService> services = providerServices.get(serviceKey);
         if (null == services)
@@ -84,6 +77,7 @@ public class ServiceCenter implements ServiceListener
             providerServices.putIfAbsent(serviceKey, new CopyOnWriteArrayList<ProviderService>());
             services = providerServices.get(serviceKey);
         }
+        String provider = paths[PROVIDER_IDX];
         String[] ipPortArray = provider.split(COLON);
         ProviderService providerService = new ProviderService();
         providerService.setName(addedService.getName());
@@ -96,5 +90,41 @@ public class ServiceCenter implements ServiceListener
             services.add(providerService);
         }
         log.info("The new service has been added to the service center.[{}]", providerService);
+    }
+    
+    private ServiceTriple<String, String, String> createServiceTriple(String[] paths)
+    {
+        String serviceTriple = paths[SERVICETRIPLE_IDX];
+        
+        log.info("There is a new provider service online and the service name is {}.", serviceTriple);
+        
+        String[] serviceArray = serviceTriple.split(Service.SERVICE_SEPERATOR);
+        ServiceTriple<String, String, String> serviceKey = new ServiceTriple<String, String, String>(
+            serviceArray[GROUP_IDX], serviceArray[SERVICE_IDX], serviceArray[VERSION_IDX]);
+        return serviceKey;
+    }
+    
+    @Override
+    public synchronized void serviceDeleted(Service deletedService, String servicePath)
+    {
+        String[] paths = servicePath.split(RegistryUtil.PATH_SEPARATOR);
+        ServiceTriple<String, String, String> serviceKey = createServiceTriple(paths);
+        String provider = paths[PROVIDER_IDX];
+        log.info("There is a provider[{}] offline.", provider);
+        String[] ipPortArray = provider.split(COLON);
+        ProviderService service = new ProviderService();
+        service.setRemoteIp(ipPortArray[0]);
+        service.setRemotePort(ipPortArray[1]);
+        List<ProviderService> services = providerServices.get(serviceKey);
+        if (null != services)
+        {
+            services.remove(service);
+        }
+    }
+    
+    @Override
+    public void serviceUpdated(Service updatedService, String servicePath)
+    {
+        
     }
 }

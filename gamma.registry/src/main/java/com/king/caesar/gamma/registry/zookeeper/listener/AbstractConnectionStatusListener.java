@@ -1,5 +1,6 @@
 package com.king.caesar.gamma.registry.zookeeper.listener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -12,7 +13,7 @@ public abstract class AbstractConnectionStatusListener implements ConnectionStat
 {
     protected Logger log = LoggerFactory.getLogger(getClass());
     
-    private List<Event.StatusType> acceptedEvents;
+    private List<Event.StatusType> acceptedEvents = new ArrayList<Event.StatusType>();
     
     @Override
     public void statusChanged(Registry registry, Event.StatusType status)
