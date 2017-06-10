@@ -36,6 +36,10 @@ public class NettyRemotingServer implements RemotingServer
     
     private ServerBootstrap bootstrap;
     
+    private EventLoopGroup bossGroup;
+    
+    private EventLoopGroup workerGroup;
+    
     // <clientID,Connection> 连接到服务端的所有连接
     private ConcurrentHashMap<String, Connection> authedConnections = new ConcurrentHashMap<String, Connection>();
     
@@ -45,8 +49,8 @@ public class NettyRemotingServer implements RemotingServer
     @Override
     public void init()
     {
-        EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-        EventLoopGroup workerGroup = new NioEventLoopGroup(2);
+        bossGroup = new NioEventLoopGroup(1);
+        workerGroup = new NioEventLoopGroup(2);
         bootstrap = new ServerBootstrap();
         bootstrap.option(ChannelOption.SO_BACKLOG, 1024)
             .option(ChannelOption.SO_REUSEADDR, true)
@@ -86,7 +90,7 @@ public class NettyRemotingServer implements RemotingServer
         return binded;
     }
     
-    public static void close(ChannelFuture channelFuture)
+    private void close(ChannelFuture channelFuture)
     {
         Channel channel = channelFuture.channel();
         if (null != channel)
@@ -116,6 +120,13 @@ public class NettyRemotingServer implements RemotingServer
     public Connection getAuthedConnections(String clientId)
     {
         return authedConnections.get(clientId);
+    }
+    
+    @Override
+    public void close()
+    {
+        bossGroup.shutdownGracefully();
+        workerGroup.shutdownGracefully();
     }
     
 }

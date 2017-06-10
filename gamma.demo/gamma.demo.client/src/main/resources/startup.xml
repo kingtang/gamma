@@ -2,6 +2,6 @@
 <Startup>
 	<ContextParam>
 		<name>springConfigLocations</name>
-		<value>classpath*:/META-INF/spring/*-importer.xml,classpath*:/META-INF/spring/gamma*.xml</value>
+		<value>classpath*:/META-INF/spring/*-importer.xml,classpath*:/META-INF/spring/gamma-connector.xml,classpath*:/META-INF/spring/gamma-engine.xml,classpath*:/META-INF/spring/gamma-rpc.xml</value>
 	</ContextParam>
 </Startup>

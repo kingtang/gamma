@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Startup>
+	<ContextParam>
+		<name>springConfigLocations</name>
+		<value>
+			classpath*:/META-INF/spring/*-exporter.xml,classpath*:/META-INF/spring/gamma-connector.xml,classpath*:/META-INF/spring/gamma-engine.xml,classpath*:/META-INF/spring/gamma-rpc.xml
+		</value>
+	</ContextParam>
+</Startup>

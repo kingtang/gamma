@@ -297,4 +297,21 @@ public class ZookeeperRegistry extends AbstractEventService implements Registry
         // 关闭zk
         zkClient.close();
     }
+    
+    @Override
+    public boolean unRegister(String path)
+    {
+        if (checkExists(path))
+        {
+            try
+            {
+                zkClient.delete().forPath(path);
+            }
+            catch (Exception e)
+            {
+                throw new IllegalStateException(e.getMessage(), e);
+            }
+        }
+        return true;
+    }
 }

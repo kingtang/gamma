@@ -16,6 +16,8 @@ import com.king.caesar.gamma.rpc.pool.ServiceExecutor;
 
 public class BootstrapTest
 {
+    
+    
     @Test
     public void testBootstrap()
     {
@@ -29,7 +31,7 @@ public class BootstrapTest
         ConfigAttribute.attribute.put(Attribute.SERVER_DECODE_POOL, service);*/
         
         
-        //启动服务端
+        //手动启动服务端
         NettyRemotingServer server = new NettyRemotingServer();
         server.init();
         server.open();

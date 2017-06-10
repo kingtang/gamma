@@ -27,5 +27,9 @@
     	<groupId>com.king.caesar</groupId>
     	<artifactId>gamma.spring</artifactId>
     </dependency>
+     <dependency>
+    	<groupId>com.king.caesar</groupId>
+    	<artifactId>gamma.connector</artifactId>
+    </dependency>
   </dependencies>
 </project>

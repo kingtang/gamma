@@ -24,6 +24,12 @@ import com.king.caesar.gamma.rpc.service.ServiceInfo;
 import com.king.caesar.gamma.rpc.service.wrapper.LocalServiceWrapper;
 import com.king.caesar.gamma.spring.api.servicebean.AbstractServiceBeanDefinition;
 
+/**
+ * 服务导出器，负责在spring生命周期refreshed的时候导出自己的服务。
+ * 
+ * @author: Caesar
+ * @date: 2017年6月10日 下午8:12:08
+ */
 public class ServiceExporter
     implements Exporter, ApplicationContextAware, InitializingBean, ApplicationListener<ContextRefreshedEvent>
 {
@@ -57,18 +63,22 @@ public class ServiceExporter
         while (iterator.hasNext())
         {
             Entry<String, Connector> curConnector = iterator.next();
-            if (protocol.equals(curConnector.getValue().getProtocol()))
+            // TODO 改为annotation
+            Connector connectorTemp = curConnector.getValue();
+            if (protocol.equals(connectorTemp.getProtocol()))
             {
-                connector = curConnector.getValue();
+                connector = connectorTemp;
             }
-            if(curConnector.getValue() instanceof LocalServiceWrapper)
+            // 处理local servicewrapper的场景
+            if (connectorTemp instanceof LocalServiceWrapper)
             {
-                LocalServiceWrapper serviceWrapper = (LocalServiceWrapper)curConnector.getValue();
+                LocalServiceWrapper serviceWrapper = (LocalServiceWrapper)connectorTemp;
                 Method[] methods = interfaceClass.getMethods();
+                // 解析待导出服务的本地映射
                 for (Method method : methods)
                 {
-                    //排除object的方法
-                    if(ReflectionUtils.isObjectMethod(method))
+                    // 排除object的方法
+                    if (ReflectionUtils.isObjectMethod(method))
                     {
                         continue;
                     }
@@ -76,7 +86,7 @@ public class ServiceExporter
                     service.setServiceName(serviceBeanDefinition.getName());
                     service.setTargetMethod(method);
                     service.setTarget(ref);
-                    service.setMessageFactory(curConnector.getValue());
+                    service.setMessageFactory(connectorTemp);
                     serviceWrapper.addService(service);
                 }
             }
@@ -105,11 +115,13 @@ public class ServiceExporter
     }
     
     @Override
-    public synchronized void export(Service service)
+    public void export(Service service)
     {
+        // 一个服务只会导出一遍
         if (connector instanceof Exporter && !isExported)
         {
             Exporter exporter = (Exporter)connector;
+            //服务导出由对应的connector负责
             exporter.export(service);
             isExported = true;
         }

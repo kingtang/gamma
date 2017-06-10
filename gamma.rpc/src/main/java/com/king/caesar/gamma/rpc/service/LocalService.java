@@ -9,6 +9,12 @@ import org.slf4j.LoggerFactory;
 import com.king.caesar.gamma.rpc.api.context.MessageFactory;
 import com.king.caesar.gamma.rpc.api.message.Message;
 
+/**
+ * 本地服务调用，Gamma协议接入层接入请求后最终会传递到该类完成服务调用
+ * 
+ * @author: Caesar
+ * @date: 2017年6月10日 下午8:20:43
+ */
 public class LocalService
 {
     private static final Logger log = LoggerFactory.getLogger(LocalService.class);
@@ -21,7 +27,14 @@ public class LocalService
     
     private MessageFactory messageFactory;
     
-    public Message invoke(Message request,Object... args)
+    /**
+     * 本地服务调用
+     * 
+     * @param request 服务请求用于构造服务响应
+     * @param args 本地api调用的参数
+     * @return
+     */
+    public Message invoke(Message request, Object... args)
     {
         Message response = messageFactory.createResponse(request);
         try
@@ -49,7 +62,9 @@ public class LocalService
     }
     
     /**
-     * ServiceKey封装，当前包含service和operation后面还会细化 重写其hashcode和equals方法
+     * ServiceKey封装，当前包含service和operation后面还会细化
+     * <p>
+     * 重写了hashcode和equals方法
      * 
      * @author: Caesar
      * @date: 2017年5月28日 下午1:25:02
@@ -142,12 +157,12 @@ public class LocalService
     {
         this.target = target;
     }
-
+    
     public MessageFactory getMessageFactory()
     {
         return messageFactory;
     }
-
+    
     public void setMessageFactory(MessageFactory messageFactory)
     {
         this.messageFactory = messageFactory;

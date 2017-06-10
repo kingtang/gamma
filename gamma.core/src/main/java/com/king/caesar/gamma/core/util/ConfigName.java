@@ -8,28 +8,45 @@ import org.springframework.core.io.Resource;
 import com.king.caesar.gamma.core.constants.Result;
 import com.king.caesar.gamma.core.exception.GammaException;
 
+/**
+ * TODO 配置项集中在该类管理
+ * 
+ * @author: Caesar
+ * @date: 2017年6月10日 下午8:27:04
+ */
 public final class ConfigName
 {
     static Properties properties = new Properties();
     
+    // 注册中心连接超时时间
     public static int REGISTRY_CONNECT_TIMEOUT;
     
+    // 注册中心session失效时间
     public static int REGISTRY_SESSION_TIMEOUT;
     
+    // 注册中心地址
     public static String REGISTRY_ADDRESS;
     
+    // 应用名
     public static String APPLICATION_NAME;
     
+    // 应用IP
     public static String IP;
     
+    // 应用端口
     public static String PORT;
     
     public static Integer CONNECT_TIMEOUT_MILLIS;
     
+    // socket发送缓存
     public static Integer SO_SNDBUF;
     
+    // socket接收缓存
     public static Integer SO_RCVBUF;
     
+    /**
+     * 首次使用触发属性配置加载
+     */
     static
     {
         Resource[] resources = ResourceLoader.loadResources("classpath:gamma.properties");

@@ -14,25 +14,28 @@ import com.king.caesar.gamma.rpc.api.service.Service;
  */
 public interface Registry extends Closeable
 {
-    List<String> subscribe(String path,ServiceListener listener);
+    List<String> subscribe(String path, ServiceListener listener);
     
-    List<Service> subscribeService(String path,ServiceListener listener);
+    List<Service> subscribeService(String path, ServiceListener listener);
     
-    //获取数据
+    // 获取数据
     String getData(String path);
     
-    //去注册
+    // 去除服务订阅，应该同步去掉对服务的监听
     boolean unSubscribe(String path);
     
-    //注册服务
-    void register(String path,String zkData);
+    // 注册服务
+    void register(String path, String zkData);
     
-    //连接注册中心
+    // 去除注册的服务
+    boolean unRegister(String path);
+    
+    // 连接注册中心
     void connect(String connectString);
     
-    //资源关闭接口
+    // 资源关闭接口
     void close();
     
-    //检查节点是否存在
+    // 检查节点是否存在
     boolean checkExists(String path);
 }

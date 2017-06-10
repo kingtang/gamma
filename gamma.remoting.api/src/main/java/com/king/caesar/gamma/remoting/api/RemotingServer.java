@@ -5,4 +5,6 @@ public interface RemotingServer
     void init();
     
     boolean open();
+    
+    void close();
 }
