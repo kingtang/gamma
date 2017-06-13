@@ -35,4 +35,4 @@ Gamma内部采用的私有的gamma协议通信，gamma协议的描述如下图�
 ![protocal](http://oi04x12g2.bkt.clouddn.com/composite.png)
 # 快速入门
 ***
-* [Wiki(中文)](https://github.com/kingtang/gamma/wiki)
+* [Wiki(中文)](https://github.com/kingtang/gamma/wiki/Gamma%E5%BF%AB%E9%80%9F%E6%8C%87%E5%8D%97)
