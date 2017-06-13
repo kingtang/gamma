@@ -25,7 +25,7 @@
 - Connector&ensp;&ensp;&ensp;&ensp;连接器层类似tomcat中的connector概念，这里不同的connector处理不同的协议
 - ServiceEngine&ensp;服务引擎负责处理connecotr流入和流出的消息具备负载均衡、容错等功能
 - Pipeline&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;数据管道被ServiceEngine集成能够实现数据在Pipeline中的双向流动，其中pipeline中的每个数据处理节点称为一个Handler，支持在已有的pipeline中扩展自定义Handler
-- ServiceCenter&ensp;&ensp; 服务中心提供基本的服务注册和发现能力、缓存能力
+- ServiceCenter&ensp;&ensp;服务中心提供基本的服务注册和发现能力、缓存能力
 - Monitor &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;提供服务监控、服务质量统计等功能未断路器提供参考数据
 - Config&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;提供分布式配置管理能力
 ### 私有协议
