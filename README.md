@@ -19,7 +19,7 @@
 - Rest协议的支持
 # 整体架构
 ***
-![架构图](http://oi04x12g2.bkt.clouddn.com/%E6%9E%B6%E6%9E%84%E5%9B%BE.png)
+![arc](http://oi04x12g2.bkt.clouddn.com/arc.png)
 - Remoting&ensp;&ensp;&ensp;&ensp; 通信层分为客户端和服务端，提供基本的空闲链路检测、心跳、重连、半包处理功能，基于Netty实现
 - RPC&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;RPC层提供服务导入、导出、序列化、编解码、线程池、消息封装、服务调用上下文等基础功能
 - Connector&ensp;&ensp;&ensp;&ensp;连接器层类似tomcat中的connector概念，这里不同的connector处理不同的协议
